@@ -28,12 +28,19 @@ router.get('/', function(req, res){
 });
 
 
-// more routes for our API will happen here
 
-// REGISTER OUR ROUTES -------------------------------
+// REGISTER OUR ROUTES 
 // all of our routes will be prefixed with /api
 
 app.use('/api', router);
+
+// DB INITIALISATION
+
+var mongoose   = require('mongoose');
+mongoose.connect('mongodb://localhost:27017'); // connect to our database
+
+var item 	   = require('./models/item');
+
 
 // START THE SERVER
 // =============================================================================
