@@ -47,7 +47,7 @@ router.route('/items')
 		var item = new Item ();				// create new item instance
 		item.name = req.body.name;			// set the item name
 
-		// save the bear and check for errors
+		// save the item and check for errors
 		item.save(function(err) {
 			if (err) res.send(err);
 
@@ -66,7 +66,7 @@ router.route('/items')
 
 router.route('/items/:item_id')
 
-    // get the bear with that id (accessed at GET http://localhost:2500/api/items/:item_id)
+    // get the item with that id (accessed at GET http://localhost:2500/api/items/:item_id)
     .get(function(req, res) {
         Item.findById(req.params.item_id, function(err, item) {
             if (err)
@@ -76,33 +76,47 @@ router.route('/items/:item_id')
         });
     })
 
-    // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
+    // update the item with this id (accessed at PUT http://localhost:2500/api/items/:item_id)
     .put(function(req, res) {
 
-        // use our bear model to find the bear we want
+        // use our item model to find the item we want
         Item.findById(req.params.item_id, function(err, item) {
 
             if (err)
                 res.send(err);
 
-            item.name = req.body.name;  // update the bears info
+            item.name = req.body.name;  // update the items info
 
-            // save the bear
+            // save the item
             item.save(function(err) {
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'item ' + item.name +' updated!' });
+                res.json({ message: 'item ' + req.params.item_id+' updated!' });
             });
 
+        });
+    })
+
+    // delete the item with this id (accessed at DELETE http://localhost:2500/api/items/:item_id)
+    .delete(function(req, res) {
+        Item.remove({
+            _id: req.params.item_id
+        }, function(err, item) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Successfully ' + req.params.item_id + ' deleted' });
         });
     });
 
 router.route('/items/name/:item_name')
 
-    // get the bear with that id (accessed at GET http://localhost:2500/api/items/:item_id)
+    // get the item with that id (accessed at GET http://localhost:2500/api/items/:item_id)
     .get(function(req, res) {
-        Item.findOne({ 'name' : req.params.item_name }, function(err, item) {
+        Item.findOne({ 
+        	'name' : req.params.item_name 
+    	}, function(err, item) {
             if (err)
                 res.send(err);
 
