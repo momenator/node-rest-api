@@ -19,13 +19,50 @@ var port = process.env.PORT || 2500;	// set the port number
 
 var router = express.Router();
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// middleware to use for all requests
+router.use(function(req, res, next) {
+    // do logging
+    console.log('An API request received...');
 
+    // next() to indicate to our application that it 
+    // should continue to the other routes. This is 
+    // important because our application would stop at 
+    // this middleware without it.
+    
+    next(); 
+});
+
+// test route to make sure everything is working (accessed at GET http://localhost:2500/api)
 router.get('/', function(req, res){
 	res.json({
 		message: "API ONLINE!"
 	});
 });
+
+router.route('/items')
+
+	// create an item ( accessed at POST http://localhost:2500/api/ )
+	.post(function(req, res) {
+
+		var item = new Item ();				// create new item instance
+		item.name = req.body.name;			// set the item name
+
+		// save the bear and check for errors
+		item.save(function(err) {
+			if (err) res.send(err);
+
+			res.json({ message: "Item saved" });
+		});
+	})
+
+	.get(function(req, res){
+		Item.find(function(err, items){
+			if (err) res.send(err);
+
+			res.json(items);
+		});
+	});
+
 
 
 
@@ -37,9 +74,9 @@ app.use('/api', router);
 // DB INITIALISATION
 
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017'); // connect to our database
+mongoose.connect('mongodb://localhost:27017/rest-db'); // connect to our database
 
-var item 	   = require('./models/item');
+var Item 	   = require('./models/item');
 
 
 // START THE SERVER
