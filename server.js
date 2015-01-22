@@ -51,7 +51,7 @@ router.route('/items')
 		item.save(function(err) {
 			if (err) res.send(err);
 
-			res.json({ message: "Item saved" });
+			res.json({ message: 'Item ' + item.name + ' saved' });
 		});
 	})
 
@@ -73,6 +73,28 @@ router.route('/items/:item_id')
                 res.send(err);
 
             res.json(item);
+        });
+    })
+
+    // update the bear with this id (accessed at PUT http://localhost:8080/api/bears/:bear_id)
+    .put(function(req, res) {
+
+        // use our bear model to find the bear we want
+        Item.findById(req.params.item_id, function(err, item) {
+
+            if (err)
+                res.send(err);
+
+            item.name = req.body.name;  // update the bears info
+
+            // save the bear
+            item.save(function(err) {
+                if (err)
+                    res.send(err);
+
+                res.json({ message: 'item ' + item.name +' updated!' });
+            });
+
         });
     });
 
