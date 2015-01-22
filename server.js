@@ -57,12 +57,36 @@ router.route('/items')
 
 	.get(function(req, res){
 		Item.find(function(err, items){
-			if (err) res.send(err);
+			if (err) 
+				res.send(err);
 
 			res.json(items);
 		});
 	});
 
+router.route('/items/:item_id')
+
+    // get the bear with that id (accessed at GET http://localhost:2500/api/items/:item_id)
+    .get(function(req, res) {
+        Item.findById(req.params.item_id, function(err, item) {
+            if (err)
+                res.send(err);
+
+            res.json(item);
+        });
+    });
+
+router.route('/items/name/:item_name')
+
+    // get the bear with that id (accessed at GET http://localhost:2500/api/items/:item_id)
+    .get(function(req, res) {
+        Item.findOne({ 'name' : req.params.item_name }, function(err, item) {
+            if (err)
+                res.send(err);
+
+            res.json(item);
+        });
+    });
 
 
 
